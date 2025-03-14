@@ -11,6 +11,7 @@ import AboutUs from "./pages/AboutUs";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
+import ScholarshipRecommendation from "./pages/ScholarshipRecommendation"; // Import the ScholarshipRecommendation page
 import { Chatbot } from "@/components/ui/chatbot"; // Import the Chatbot component
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/about" element={<AboutUs />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/scholarship-recommendation" element={<ScholarshipRecommendation />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

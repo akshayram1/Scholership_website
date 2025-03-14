@@ -1,7 +1,7 @@
-
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Search } from 'lucide-react';
+import { ChevronRight, Search, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function HeroSection() {
   return (
@@ -21,13 +21,13 @@ export function HeroSection() {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6">
-              Discover Your Perfect 
+              Discover Your Perfect
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 px-2">
                 Scholarship
               </span>
             </h1>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -37,31 +37,45 @@ export function HeroSection() {
               Navigate thousands of scholarships and government schemes to find the perfect funding for your educational journey.
             </p>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Button 
-              className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-blue-600 text-base"
-              size="lg"
-            >
-              Find Scholarships
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-            
-            <Button 
-              variant="outline"
-              className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50 px-6 py-6 rounded-lg shadow-sm hover:shadow transition-all duration-300 text-base"
-              size="lg"
-            >
-              Explore Schemes
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
+            <Link to="/scholarships">
+              <Button
+                className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-blue-600 text-base w-full sm:w-auto"
+                size="lg"
+              >
+                Find Scholarships
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+
+            <Link to="/schemes">
+              <Button
+                variant="outline"
+                className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50 px-6 py-6 rounded-lg shadow-sm hover:shadow transition-all duration-300 text-base w-full sm:w-auto"
+                size="lg"
+              >
+                Explore Schemes
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+
+            <Link to="/scholarship-recommendation">
+              <Button
+                className="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:from-purple-700 hover:to-pink-600 text-base w-full sm:w-auto"
+                size="lg"
+              >
+                Get Recommendations
+                <Sparkles className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

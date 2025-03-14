@@ -1,25 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Chatbot } from '@/components/ui/chatbot';
 import { ScholarshipCard, ScholarshipData } from '@/components/ScholarshipCard';
 import { motion } from 'framer-motion';
-import { Filter, Search, X, Lock } from 'lucide-react';
+import { Filter, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { ScholarshipSearchForm } from '@/components/ScholarshipSearchForm';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { z } from 'zod';
 import { LoginForm } from '@/components/LoginForm';
 import { SignupForm } from '@/components/SignupForm';
 import { useToast } from '@/hooks/use-toast';
+import Papa from 'papaparse';
 
 // Updated schema
 const searchFormSchema = z.object({
   query: z.string().optional(),
   educationLevel: z.string().optional(),
   category: z.string().optional(),
-  state: z.string().optional(), // Added state field
-  age: z.number().min(0).max(120).optional(), // Added age field
+  state: z.string().optional(),
+  age: z.number().min(0).max(120).optional(),
   gender: z.string().optional(),
   handicap: z.boolean().optional(),
   incomeRange: z.array(z.number()).default([0, 100000]),
@@ -27,79 +28,242 @@ const searchFormSchema = z.object({
 
 type SearchFormValues = z.infer<typeof searchFormSchema>;
 
-const scholarshipsData: ScholarshipData[] = [
-  // ... (keep the existing scholarship data)
-];
+// Define CSV data structure
+interface CSVScholarshipData {
+  'Scholarship Name': string;
+  'Eligibility': string;
+  'Deadline': string;
+  'Link': string;
+}
+
+// Update the mapCsvToScholarshipData function to better handle scholarship names
+const mapCsvToScholarshipData = (csvData: CSVScholarshipData[]): ScholarshipData[] => {
+  return csvData.map((item, index) => {
+    // Ensure we have valid data
+    const scholarshipName = item['Scholarship Name'] || '';
+    const eligibility = item.Eligibility?.toLowerCase() || '';
+
+    // Generate organization name from the first part of scholarship name
+    let organization = '';
+    if (scholarshipName) {
+      const firstWord = scholarshipName.split(' ')[0];
+      organization = firstWord === 'The' ?
+        scholarshipName.split(' ')[1] || '' : firstWord;
+    }
+
+    // Extract education level with improved detection
+    let level = '';
+    if (eligibility.includes('undergraduate') || eligibility.includes('bachelor') ||
+      eligibility.includes('b.sc') || eligibility.includes('b.tech') ||
+      eligibility.includes('b.e.')) {
+      level = 'undergraduate';
+    } else if (eligibility.includes('postgraduate') || eligibility.includes('master') ||
+      eligibility.includes('m.sc') || eligibility.includes('m.tech')) {
+      level = 'postgraduate';
+    } else if (eligibility.includes('phd') || eligibility.includes('doctoral')) {
+      level = 'phd';
+    } else if (eligibility.includes('class 10') || eligibility.includes('class 9')) {
+      level = 'high_school';
+    } else if (eligibility.includes('class 11') || eligibility.includes('class 12')) {
+      level = 'higher_secondary';
+    } else if (eligibility.includes('matric')) {
+      level = 'high_school';
+    }
+
+    // Extract state with improved detection
+    let state = '';
+    if (eligibility.includes('tripura')) {
+      state = 'tripura';
+    } else if (eligibility.includes('haryana')) {
+      state = 'haryana';
+    } else if (eligibility.includes('maharashtra')) {
+      state = 'maharashtra';
+    } else if (eligibility.includes('chandigarh')) {
+      state = 'chandigarh';
+    } else if (eligibility.includes('west bengal')) {
+      state = 'west bengal';
+    } else if (eligibility.includes('odisha')) {
+      state = 'odisha';
+    } else if (eligibility.includes('manipur')) {
+      state = 'manipur';
+    }
+
+    const stateMatches = eligibility.match(/domicile of ([a-z\s]+)|resident of ([a-z\s]+)/i);
+    if (stateMatches) {
+      state = (stateMatches[1] || stateMatches[2]).trim();
+    }
+
+    // Extract age requirements
+    let minAge = 0;
+    let maxAge = 100;
+    const ageMatches = eligibility.match(/(\d+) years of age|below (\d+) years|(\d+) years or younger|age of (\d+)/i);
+    if (ageMatches) {
+      const ageValue = parseInt(ageMatches[1] || ageMatches[2] || ageMatches[3] || ageMatches[4]);
+      if (eligibility.includes('below') || eligibility.includes('younger')) {
+        maxAge = ageValue;
+      } else {
+        minAge = Math.max(0, ageValue - 5);
+        maxAge = ageValue + 5;
+      }
+    }
+
+    // Create scholarship object
+    return {
+      id: `scholarship-${index + 1}`,
+      title: scholarshipName,
+      organization: organization,
+      description: item.Eligibility || '',
+      amount: 'Varies',
+      deadline: item.Deadline !== 'N/A' ? item.Deadline : 'Open',
+      level: level,
+      state: state,
+      minAge: minAge,
+      maxAge: maxAge,
+      link: item.Link || '#',
+      image: `/scholarship-${(index % 5) + 1}.jpg`,
+      tags: [level, state].filter(Boolean)
+    };
+  });
+};
 
 const Scholarships = () => {
-  const [filteredScholarships, setFilteredScholarships] = useState<ScholarshipData[]>(scholarshipsData);
+  const [scholarshipsData, setScholarshipsData] = useState<ScholarshipData[]>([]);
+  const [filteredScholarships, setFilteredScholarships] = useState<ScholarshipData[]>([]);
   const [appliedFilters, setAppliedFilters] = useState<SearchFormValues | null>(null);
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authType, setAuthType] = useState<'login' | 'signup'>('login');
-  
+  const [isLoading, setIsLoading] = useState(true);
+
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
-  
+
+  // Update the useEffect to add more detailed logging
+  useEffect(() => {
+    const loadScholarshipData = async () => {
+      try {
+        setIsLoading(true);
+        console.log("Fetching CSV data...");
+
+        const response = await fetch('/src/assets/scholarships_data.csv');
+
+        if (!response.ok) {
+          console.error(`Failed to fetch CSV: ${response.status} ${response.statusText}`);
+          throw new Error(`Failed to load CSV: ${response.status} ${response.statusText}`);
+        }
+
+        const csvText = await response.text();
+        console.log("CSV data loaded, first 100 chars:", csvText.substring(0, 100));
+
+        // Skip the first line if it contains filepath comment
+        const csvData = csvText.startsWith('//')
+          ? csvText.substring(csvText.indexOf('\n') + 1)
+          : csvText;
+
+        Papa.parse(csvData, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            if (results.errors && results.errors.length > 0) {
+              console.warn("CSV parsing warnings:", results.errors);
+            }
+
+            console.log(`Parsed ${results.data.length} rows from CSV`);
+
+            const scholarships = mapCsvToScholarshipData(results.data as CSVScholarshipData[]);
+            console.log(`Processed ${scholarships.length} scholarships`);
+
+            // Log the first few entries to check mapping
+            console.log("Sample scholarships:", scholarships.slice(0, 3));
+
+            setScholarshipsData(scholarships);
+            setFilteredScholarships(scholarships);
+            setIsLoading(false);
+          },
+          error: (error) => {
+            console.error('Error parsing CSV data:', error);
+            setIsLoading(false);
+          }
+        });
+      } catch (error) {
+        console.error('Error loading scholarship data:', error);
+        setIsLoading(false);
+      }
+    };
+
+    loadScholarshipData();
+  }, []);
+
+  // Update the handleSearch function to focus on scholarship names
   const handleSearch = (criteria: SearchFormValues) => {
-    if (!isAuthenticated) {
-      setAuthDialogOpen(true);
-      return;
-    }
-    
+    console.log("Search criteria:", criteria);
+    console.log("Available scholarships:", scholarshipsData);
+
     const results = scholarshipsData.filter(scholarship => {
-      // Filter by query
+      // Filter by query (focusing on scholarship name)
       if (criteria.query && criteria.query.trim() !== "") {
-        const query = criteria.query.toLowerCase();
-        if (!scholarship.title.toLowerCase().includes(query) && 
-            !scholarship.organization.toLowerCase().includes(query) &&
-            !scholarship.description.toLowerCase().includes(query)) {
+        const query = criteria.query.toLowerCase().trim();
+        const titleMatch = scholarship.title.toLowerCase().includes(query);
+        const orgMatch = scholarship.organization.toLowerCase().includes(query);
+        const descMatch = scholarship.description.toLowerCase().includes(query);
+
+        if (!titleMatch && !orgMatch && !descMatch) {
+          console.log(`Rejected by query: ${scholarship.title}`);
           return false;
         }
       }
-      
+
       // Filter by education level
-      if (criteria.educationLevel && 
-          scholarship.level && 
-          criteria.educationLevel !== scholarship.level.toLowerCase()) {
-        return false;
-      }
-      
-      // Filter by state (if applicable)
-      if (criteria.state && scholarship.state && criteria.state !== scholarship.state) {
-        return false;
-      }
-      
-      // Filter by age (if applicable)
-      if (criteria.age && scholarship.minAge && scholarship.maxAge) {
-        if (criteria.age < scholarship.minAge || criteria.age > scholarship.maxAge) {
+      if (criteria.educationLevel && criteria.educationLevel !== "" &&
+        scholarship.level && scholarship.level !== "") {
+        if (criteria.educationLevel !== scholarship.level) {
+          console.log(`Rejected by education level: ${scholarship.title} - Expected: ${criteria.educationLevel}, Got: ${scholarship.level}`);
           return false;
         }
       }
-      
+
+      // Filter by state (if applicable)
+      if (criteria.state && criteria.state !== "" &&
+        scholarship.state && scholarship.state !== "") {
+        if (!scholarship.state.toLowerCase().includes(criteria.state.toLowerCase())) {
+          console.log(`Rejected by state: ${scholarship.title}`);
+          return false;
+        }
+      }
+
+      // Filter by age (if applicable)
+      if (criteria.age && criteria.age > 0) {
+        if (scholarship.minAge === undefined || scholarship.maxAge === undefined ||
+          criteria.age < scholarship.minAge || criteria.age > scholarship.maxAge) {
+          console.log(`Rejected by age: ${scholarship.title}`);
+          return false;
+        }
+      }
+
       return true;
     });
-    
+
+    console.log("Search results:", results);
     setFilteredScholarships(results);
     setAppliedFilters(criteria);
   };
-  
+
   const resetFilters = () => {
     setFilteredScholarships(scholarshipsData);
     setAppliedFilters(null);
   };
-  
+
   const handleAuthSuccess = () => {
     setAuthDialogOpen(false);
     toast({
       title: "Authentication successful",
-      description: "You can now filter scholarships!",
+      description: "You can now access all features!",
     });
   };
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <main className="flex-1 pt-16">
         <section className="bg-gradient-to-r from-purple-600 to-violet-500 text-white py-16">
           <div className="container px-4 mx-auto">
@@ -119,39 +283,21 @@ const Scholarships = () => {
             </div>
           </div>
         </section>
-        
+
         <section className="py-8 border-b">
           <div className="container px-4 mx-auto">
             <div className="relative">
-              {!isAuthenticated && (
-                <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
-                  <div className="text-center p-6 bg-white/80 rounded-lg shadow-md">
-                    <Lock className="h-12 w-12 text-primary mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">Login Required</h3>
-                    <p className="text-gray-600 mb-4">Please login to filter scholarships</p>
-                    <Button 
-                      onClick={() => {
-                        setAuthType('login');
-                        setAuthDialogOpen(true);
-                      }}
-                      className="bg-gradient-to-r from-purple-500 to-violet-600 text-white"
-                    >
-                      Login to Continue
-                    </Button>
-                  </div>
-                </div>
-              )}
               <ScholarshipSearchForm onSearch={handleSearch} />
             </div>
-            
+
             {appliedFilters && (
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <span className="text-sm text-gray-500">Active filters:</span>
-                
+
                 {appliedFilters.query && (
                   <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm flex items-center">
                     <span>Keyword: {appliedFilters.query}</span>
-                    <button 
+                    <button
                       className="ml-2 hover:text-purple-900"
                       onClick={resetFilters}
                     >
@@ -159,11 +305,11 @@ const Scholarships = () => {
                     </button>
                   </div>
                 )}
-                
+
                 {appliedFilters.educationLevel && (
                   <div className="bg-violet-100 text-violet-800 px-3 py-1 rounded-full text-sm flex items-center">
                     <span>Education: {appliedFilters.educationLevel.replace('_', ' ')}</span>
-                    <button 
+                    <button
                       className="ml-2 hover:text-violet-900"
                       onClick={resetFilters}
                     >
@@ -171,11 +317,11 @@ const Scholarships = () => {
                     </button>
                   </div>
                 )}
-                
+
                 {appliedFilters.state && (
                   <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
                     <span>State: {appliedFilters.state}</span>
-                    <button 
+                    <button
                       className="ml-2 hover:text-blue-900"
                       onClick={resetFilters}
                     >
@@ -183,11 +329,11 @@ const Scholarships = () => {
                     </button>
                   </div>
                 )}
-                
+
                 {appliedFilters.age && (
                   <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center">
                     <span>Age: {appliedFilters.age}</span>
-                    <button 
+                    <button
                       className="ml-2 hover:text-green-900"
                       onClick={resetFilters}
                     >
@@ -195,10 +341,10 @@ const Scholarships = () => {
                     </button>
                   </div>
                 )}
-                
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={resetFilters}
                   className="text-xs"
                 >
@@ -208,30 +354,48 @@ const Scholarships = () => {
             )}
           </div>
         </section>
-        
+
         <section className="py-12">
           <div className="container px-4 mx-auto">
             <div className="mb-8 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                {filteredScholarships.length} Scholarships Available
+                {isLoading ? "Loading scholarships..." : `${filteredScholarships.length} Scholarships Available`}
               </h2>
             </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredScholarships.map((scholarship, index) => (
-                <ScholarshipCard 
-                  key={scholarship.id} 
-                  scholarship={scholarship} 
-                  index={index} 
-                />
-              ))}
-            </div>
-            
-            {filteredScholarships.length === 0 && (
+
+            {isLoading ? (
+              <div className="flex justify-center py-20">
+                <div className="animate-pulse flex space-x-4">
+                  <div className="rounded-full bg-slate-200 h-10 w-10"></div>
+                  <div className="flex-1 space-y-6 py-1">
+                    <div className="h-2 bg-slate-200 rounded"></div>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="h-2 bg-slate-200 rounded col-span-2"></div>
+                        <div className="h-2 bg-slate-200 rounded col-span-1"></div>
+                      </div>
+                      <div className="h-2 bg-slate-200 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredScholarships.map((scholarship, index) => (
+                  <ScholarshipCard
+                    key={scholarship.id}
+                    scholarship={scholarship}
+                    index={index}
+                  />
+                ))}
+              </div>
+            )}
+
+            {!isLoading && filteredScholarships.length === 0 && (
               <div className="text-center py-12">
                 <p className="text-lg text-gray-600">No scholarships found matching your criteria.</p>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="mt-4"
                   onClick={resetFilters}
                 >
@@ -242,8 +406,9 @@ const Scholarships = () => {
           </div>
         </section>
       </main>
-      
+
       <footer className="bg-gray-900 text-white py-12">
+        {/* Footer content remains unchanged */}
         <div className="container px-4 mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -283,23 +448,23 @@ const Scholarships = () => {
           </div>
         </div>
       </footer>
-      
+
       <Dialog open={authDialogOpen} onOpenChange={setAuthDialogOpen}>
         <DialogContent className="sm:max-w-md border-none shadow-xl bg-white/90 backdrop-blur-xl p-6">
           {authType === 'login' ? (
-            <LoginForm 
-              onSuccess={handleAuthSuccess} 
-              onSwitchToSignup={() => setAuthType('signup')} 
+            <LoginForm
+              onSuccess={handleAuthSuccess}
+              onSwitchToSignup={() => setAuthType('signup')}
             />
           ) : (
-            <SignupForm 
+            <SignupForm
               onSuccess={handleAuthSuccess}
-              onSwitchToLogin={() => setAuthType('login')} 
+              onSwitchToLogin={() => setAuthType('login')}
             />
           )}
         </DialogContent>
       </Dialog>
-      
+
       <Chatbot />
     </div>
   );

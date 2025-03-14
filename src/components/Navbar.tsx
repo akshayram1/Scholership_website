@@ -57,20 +57,19 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm' 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+          ? 'bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm'
           : 'bg-transparent'
-      }`}
+        }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo on the left */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              
+
               <img
-                src={logo} 
+                src={logo}
                 alt="Logo"
                 className="h-14 w-auto" // Adjust height as needed
               />
@@ -81,52 +80,56 @@ export function Navbar() {
           <nav className="hidden md:flex items-center space-x-6">
             <Link
               to="/"
-              className={`text-sm font-medium ${
-                isActiveRoute('/') 
-                  ? 'text-primary border-b-2 border-primary' 
+              className={`text-sm font-medium ${isActiveRoute('/')
+                  ? 'text-primary border-b-2 border-primary'
                   : 'text-gray-700 hover:text-primary hover:border-b-2 hover:border-primary/50'
-              } transition-all duration-300`}
+                } transition-all duration-300`}
             >
               Home
             </Link>
             <Link
               to="/scholarships"
-              className={`text-sm font-medium ${
-                isActiveRoute('/scholarships') 
-                  ? 'text-primary border-b-2 border-primary' 
+              className={`text-sm font-medium ${isActiveRoute('/scholarships')
+                  ? 'text-primary border-b-2 border-primary'
                   : 'text-gray-700 hover:text-primary hover:border-b-2 hover:border-primary/50'
-              } transition-all duration-300`}
+                } transition-all duration-300`}
             >
               Scholarships
             </Link>
             <Link
+              to="/scholarship-recommendation"
+              className={`text-sm font-medium ${isActiveRoute('/scholarship-recommendation')
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-gray-700 hover:text-primary hover:border-b-2 hover:border-primary/50'
+                } transition-all duration-300`}
+            >
+              Recommendations
+            </Link>
+            <Link
               to="/schemes"
-              className={`text-sm font-medium ${
-                isActiveRoute('/schemes') 
-                  ? 'text-primary border-b-2 border-primary' 
+              className={`text-sm font-medium ${isActiveRoute('/schemes')
+                  ? 'text-primary border-b-2 border-primary'
                   : 'text-gray-700 hover:text-primary hover:border-b-2 hover:border-primary/50'
-              } transition-all duration-300`}
+                } transition-all duration-300`}
             >
               Schemes
             </Link>
             <Link
               to="/about"
-              className={`text-sm font-medium ${
-                isActiveRoute('/about') 
-                  ? 'text-primary border-b-2 border-primary' 
+              className={`text-sm font-medium ${isActiveRoute('/about')
+                  ? 'text-primary border-b-2 border-primary'
                   : 'text-gray-700 hover:text-primary hover:border-b-2 hover:border-primary/50'
-              } transition-all duration-300`}
+                } transition-all duration-300`}
             >
               About Us
             </Link>
             {isAuthenticated && (
               <Link
                 to="/dashboard"
-                className={`text-sm font-medium ${
-                  isActiveRoute('/dashboard') 
-                    ? 'text-primary border-b-2 border-primary' 
+                className={`text-sm font-medium ${isActiveRoute('/dashboard')
+                    ? 'text-primary border-b-2 border-primary'
                     : 'text-gray-700 hover:text-primary hover:border-b-2 hover:border-primary/50'
-                } transition-all duration-300`}
+                  } transition-all duration-300`}
               >
                 Dashboard
               </Link>
@@ -140,7 +143,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-primary/10">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.avatarUrl} alt={user?.name} />
+                      
                       <AvatarFallback className="bg-primary/10 text-primary">
                         {user?.name ? getInitials(user.name) : 'U'}
                       </AvatarFallback>
@@ -178,8 +181,8 @@ export function Navbar() {
                   if (open) setAuthType('login');
                 }}>
                   <DialogTrigger asChild>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       className="text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/10 transition-colors duration-300"
                     >
                       Login
@@ -198,7 +201,7 @@ export function Navbar() {
                   if (open) setAuthType('signup');
                 }}>
                   <DialogTrigger asChild>
-                    <Button 
+                    <Button
                       className="text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 transition-all duration-500"
                     >
                       Sign Up
@@ -237,36 +240,40 @@ export function Navbar() {
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/90 backdrop-blur-md border-b border-gray-200">
           <Link
             to="/"
-            className={`block px-3 py-2 rounded-md text-base font-medium ${
-              isActiveRoute('/') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-            } transition-colors duration-300`}
+            className={`block px-3 py-2 rounded-md text-base font-medium ${isActiveRoute('/') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+              } transition-colors duration-300`}
             onClick={() => setMobileMenuOpen(false)}
           >
             Home
           </Link>
           <Link
             to="/scholarships"
-            className={`block px-3 py-2 rounded-md text-base font-medium ${
-              isActiveRoute('/scholarships') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-            } transition-colors duration-300`}
+            className={`block px-3 py-2 rounded-md text-base font-medium ${isActiveRoute('/scholarships') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+              } transition-colors duration-300`}
             onClick={() => setMobileMenuOpen(false)}
           >
             Scholarships
           </Link>
           <Link
+            to="/scholarship-recommendation"
+            className={`block px-3 py-2 rounded-md text-base font-medium ${isActiveRoute('/scholarship-recommendation') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+              } transition-colors duration-300`}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Recommendations
+          </Link>
+          <Link
             to="/schemes"
-            className={`block px-3 py-2 rounded-md text-base font-medium ${
-              isActiveRoute('/schemes') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-            } transition-colors duration-300`}
+            className={`block px-3 py-2 rounded-md text-base font-medium ${isActiveRoute('/schemes') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+              } transition-colors duration-300`}
             onClick={() => setMobileMenuOpen(false)}
           >
             Schemes
           </Link>
           <Link
             to="/about"
-            className={`block px-3 py-2 rounded-md text-base font-medium ${
-              isActiveRoute('/about') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-            } transition-colors duration-300`}
+            className={`block px-3 py-2 rounded-md text-base font-medium ${isActiveRoute('/about') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+              } transition-colors duration-300`}
             onClick={() => setMobileMenuOpen(false)}
           >
             About Us
@@ -274,9 +281,8 @@ export function Navbar() {
           {isAuthenticated && (
             <Link
               to="/dashboard"
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
-                isActiveRoute('/dashboard') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-              } transition-colors duration-300`}
+              className={`block px-3 py-2 rounded-md text-base font-medium ${isActiveRoute('/dashboard') ? 'text-primary bg-primary/5' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                } transition-colors duration-300`}
               onClick={() => setMobileMenuOpen(false)}
             >
               Dashboard
@@ -289,8 +295,8 @@ export function Navbar() {
                 if (open) setAuthType('login');
               }}>
                 <DialogTrigger asChild>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full justify-start text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-300"
                   >
@@ -310,7 +316,7 @@ export function Navbar() {
                 if (open) setAuthType('signup');
               }}>
                 <DialogTrigger asChild>
-                  <Button 
+                  <Button
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full bg-gradient-to-r from-purple-500 to-violet-600 text-white hover:from-purple-600 hover:to-violet-700 transition-all duration-500"
                   >
