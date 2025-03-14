@@ -11,7 +11,7 @@ import axios from "axios";
 
 // Ensure Google API Key is loaded correctly
 //const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-const GOOGLE_API_KEY = "AIzaSyAMd-KDicQ6AkhBg4d7e4xQAMFpVzzpI8E";
+const GOOGLE_API_KEY = "";
 
 if (!GOOGLE_API_KEY) {
   console.error("❌ Google API key is missing. Please set GOOGLE_API_KEY in .env file.");
