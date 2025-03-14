@@ -37,7 +37,7 @@ interface CSVScholarshipData {
   'Link': string;
 }
 
-// Update the mapCsvToScholarshipData function to use the specified image
+// Update the mapCsvToScholarshipData function to include eligibility
 const mapCsvToScholarshipData = (csvData: CSVScholarshipData[]): ScholarshipData[] => {
   return csvData.map((item, index) => {
     // Ensure we have valid data
@@ -114,6 +114,7 @@ const mapCsvToScholarshipData = (csvData: CSVScholarshipData[]): ScholarshipData
       title: scholarshipName,
       organization: organization,
       description: item.Eligibility || '',
+      eligibility: eligibility, // Add this line to include eligibility
       amount: 'Varies',
       deadline: item.Deadline !== 'N/A' ? item.Deadline : 'Open',
       level: level,

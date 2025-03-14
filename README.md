@@ -1,22 +1,16 @@
-# Welcome to your Lovable project
+# Scholarship Finder
 
-## Project info
+## Project Info
 
-**URL**: https://lovable.dev/projects/4b61abdb-89d5-452e-b82b-07ee20391401
+This project helps students find scholarships that match their qualifications and interests. It uses AI to search for relevant scholarships and provide personalized recommendations.
 
 ## How can I edit this code?
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/4b61abdb-89d5-452e-b82b-07ee20391401) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
+There are several ways to edit this application.
 
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you want to work locally using your own IDE, you can clone this repo and push changes.
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -50,9 +44,16 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
+## Key Features
+
+- **AI-Powered Search:** Utilizes artificial intelligence to efficiently search for scholarships based on various criteria.
+- **Personalized Recommendations:** Provides AI-driven scholarship recommendations tailored to individual student profiles.
+- **Comprehensive Database:** Includes a wide range of scholarships from various sources.
+- **User-Friendly Interface:** Easy to navigate and find relevant information.
+
 ## What technologies are used for this project?
 
-This project is built with .
+This project is built with:
 
 - Vite
 - TypeScript
@@ -62,9 +63,9 @@ This project is built with .
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/4b61abdb-89d5-452e-b82b-07ee20391401) and click on Share -> Publish.
+You can deploy this project using platforms like Netlify or Vercel.
 
 ## I want to use a custom domain - is that possible?
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+Yes, you can deploy this project under your own domain using platforms like Netlify. Visit their docs for more details: [Custom domains](https://docs.netlify.com/domains/custom-domains/)
 # Scholership_website
