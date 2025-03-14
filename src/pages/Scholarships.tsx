@@ -13,6 +13,7 @@ import { LoginForm } from '@/components/LoginForm';
 import { SignupForm } from '@/components/SignupForm';
 import { useToast } from '@/hooks/use-toast';
 import Papa from 'papaparse';
+import scholarshipImage from '/src/assets/scholership.png'; // Import the scholarship image
 
 // Updated schema
 const searchFormSchema = z.object({
@@ -36,7 +37,7 @@ interface CSVScholarshipData {
   'Link': string;
 }
 
-// Update the mapCsvToScholarshipData function to better handle scholarship names
+// Update the mapCsvToScholarshipData function to use the specified image
 const mapCsvToScholarshipData = (csvData: CSVScholarshipData[]): ScholarshipData[] => {
   return csvData.map((item, index) => {
     // Ensure we have valid data
@@ -107,7 +108,7 @@ const mapCsvToScholarshipData = (csvData: CSVScholarshipData[]): ScholarshipData
       }
     }
 
-    // Create scholarship object
+    // Create scholarship object with the new image path
     return {
       id: `scholarship-${index + 1}`,
       title: scholarshipName,
@@ -118,9 +119,9 @@ const mapCsvToScholarshipData = (csvData: CSVScholarshipData[]): ScholarshipData
       level: level,
       state: state,
       minAge: minAge,
+      image: scholarshipImage, // Use the imported image
       maxAge: maxAge,
       link: item.Link || '#',
-      image: `/scholarship-${(index % 5) + 1}.jpg`,
       tags: [level, state].filter(Boolean)
     };
   });
