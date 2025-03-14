@@ -146,10 +146,15 @@ const Scholarships = () => {
         setIsLoading(true);
         console.log("Fetching CSV data...");
 
-        const response = await fetch('/src/assets/scholarships_data.csv');
+        const response = await fetch('/scholarships_data.csv');
 
         if (!response.ok) {
           console.error(`Failed to fetch CSV: ${response.status} ${response.statusText}`);
+          toast({
+            title: "Error loading scholarships",
+            description: `Failed to load data: ${response.status} ${response.statusText}`,
+            variant: "destructive",
+          });
           throw new Error(`Failed to load CSV: ${response.status} ${response.statusText}`);
         }
 
@@ -161,10 +166,15 @@ const Scholarships = () => {
           ? csvText.substring(csvText.indexOf('\n') + 1)
           : csvText;
 
+        // After your CSV is parsed, add these logs
         Papa.parse(csvData, {
           header: true,
           skipEmptyLines: true,
           complete: (results) => {
+            console.log("CSV parsing complete");
+            console.log("Data sample:", results.data.slice(0, 2));
+
+            // Rest of your existing code
             if (results.errors && results.errors.length > 0) {
               console.warn("CSV parsing warnings:", results.errors);
             }
