@@ -1,0 +1,136 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 260 40% 98%;
+    --foreground: 260 30% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 260 30% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 30% 10%;
+
+    --primary: 260 84% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 250 30% 96%;
+    --secondary-foreground: 260 40% 20%;
+
+    --muted: 260 20% 96%;
+    --muted-foreground: 260 10% 50%;
+
+    --accent: 270 76% 70%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 260 20% 90%;
+    --input: 260 20% 90%;
+    --ring: 260 70% 60%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 260 30% 5%;
+    --foreground: 260 20% 90%;
+
+    --card: 260 30% 5%;
+    --card-foreground: 260 20% 90%;
+
+    --popover: 260 30% 5%;
+    --popover-foreground: 260 20% 90%;
+
+    --primary: 260 70% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 260 30% 15%;
+    --secondary-foreground: 260 20% 90%;
+
+    --muted: 260 30% 15%;
+    --muted-foreground: 260 20% 60%;
+
+    --accent: 270 65% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 260 30% 20%;
+    --input: 260 30% 20%;
+    --ring: 260 70% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-background to-secondary text-foreground;
+    @apply min-h-screen;
+  }
+}
+
+/* Import Inter font */
+@import url('https://rsms.me/inter/inter.css');
+
+/* Custom Components */
+@layer components {
+  .glass-morphism {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+  
+  .floating-element {
+    @apply shadow-lg transition-all duration-300 hover:shadow-xl;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg;
+  }
+  
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2;
+  }
+  
+  .nav-link {
+    @apply relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary;
+  }
+  
+  .nav-link-active {
+    @apply text-primary;
+  }
+  
+  .nav-link-active::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full;
+  }
+  
+  .page-transition-enter {
+    @apply opacity-0;
+  }
+  
+  .page-transition-enter-active {
+    @apply opacity-100 transition-opacity duration-300;
+  }
+  
+  .page-transition-exit {
+    @apply opacity-100;
+  }
+  
+  .page-transition-exit-active {
+    @apply opacity-0 transition-opacity duration-300;
+  }
+}
