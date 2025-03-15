@@ -359,6 +359,16 @@ const Scholarships = () => {
           <div className="container px-4 mx-auto">
             <div className="relative">
               <ScholarshipSearchForm onSearch={handleSearch} />
+              <div className="mt-4 flex justify-center">
+                <Button
+                  variant="outline"
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0"
+                  onClick={() => window.location.href = '/ScholarshipAISearch'}
+                >
+                  <Search className="w-4 h-4 mr-2" />
+                  Try AI-Powered Search
+                </Button>
+              </div>
             </div>
 
             {appliedFilters && (
