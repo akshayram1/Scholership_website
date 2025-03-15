@@ -1,4 +1,3 @@
-
 import { Navbar } from "@/components/Navbar";
 import { motion } from "framer-motion";
 import { ScholarshipData } from "@/components/ScholarshipCard";
@@ -8,44 +7,48 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // Sample schemes data
 const schemes: ScholarshipData[] = [
   {
-    id: '1',
-    title: 'Federal Pell Grant',
-    organization: 'U.S. Department of Education',
-    amount: 'Up to $6,895',
-    deadline: 'June 30, 2023',
-    eligibility: 'Undergraduate students with exceptional financial need',
-    level: 'Undergraduate',
-    description: 'Need-based federal grant program that provides financial aid to low-income undergraduate students to promote access to postsecondary education.'
+    id: "1",
+    title: "Federal Pell Grant",
+    organization: "U.S. Department of Education",
+    amount: "Up to $6,895",
+    deadline: "June 30, 2023",
+    eligibility: "Undergraduate students with exceptional financial need",
+    level: "Undergraduate",
+    description:
+      "Need-based federal grant program that provides financial aid to low-income undergraduate students to promote access to postsecondary education.",
   },
   {
-    id: '2',
-    title: 'Subsidized Stafford Loan',
-    organization: 'Federal Student Aid',
-    amount: 'Varies',
-    deadline: 'Ongoing',
-    eligibility: 'Students with financial need',
-    level: 'Undergraduate & Graduate',
-    description: 'Federal government pays the interest on these loans while students are in school at least half-time, during grace periods, and during deferment periods.'
+    id: "2",
+    title: "Subsidized Stafford Loan",
+    organization: "Federal Student Aid",
+    amount: "Varies",
+    deadline: "Ongoing",
+    eligibility: "Students with financial need",
+    level: "Undergraduate & Graduate",
+    description:
+      "Federal government pays the interest on these loans while students are in school at least half-time, during grace periods, and during deferment periods.",
   },
   {
-    id: '3',
-    title: 'Work-Study Program',
-    organization: 'Federal Student Aid',
-    amount: 'Varies by position',
-    deadline: 'Ongoing',
-    eligibility: 'Students with financial need',
-    level: 'Undergraduate & Graduate',
-    description: 'Provides part-time jobs for undergraduate and graduate students with financial need, allowing them to earn money to help pay education expenses.'
+    id: "3",
+    title: "Work-Study Program",
+    organization: "Federal Student Aid",
+    amount: "Varies by position",
+    deadline: "Ongoing",
+    eligibility: "Students with financial need",
+    level: "Undergraduate & Graduate",
+    description:
+      "Provides part-time jobs for undergraduate and graduate students with financial need, allowing them to earn money to help pay education expenses.",
   },
   {
-    id: '4',
-    title: 'TEACH Grant',
-    organization: 'U.S. Department of Education',
-    amount: 'Up to $4,000 per year',
-    deadline: 'Varies by school',
-    eligibility: 'Students planning to become teachers',
-    level: 'Undergraduate & Graduate',
-    description: 'Provides grants to students who agree to teach for four years at an elementary school, secondary school, or educational service agency that serves students from low-income families.'
+    id: "4",
+    title: "TEACH Grant",
+    organization: "U.S. Department of Education",
+    amount: "Up to $4,000 per year",
+    deadline: "Varies by school",
+    eligibility: "Students planning to become teachers",
+    level: "Undergraduate & Graduate",
+    description:
+      "Provides grants to students who agree to teach for four years at an elementary school, secondary school, or educational service agency that serves students from low-income families.",
   },
 ];
 
@@ -78,25 +81,25 @@ export default function Schemes() {
               className="group relative overflow-hidden rounded-lg border bg-white shadow-sm transition-all duration-300 hover:shadow-md p-6"
             >
               <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              
+
               <div className="relative space-y-3">
                 <div className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
                   {scheme.level}
                 </div>
-                
-                <h3 className="text-lg font-semibold leading-tight text-gray-900">{scheme.title}</h3>
-                
+
+                <h3 className="text-lg font-semibold leading-tight text-gray-900">
+                  {scheme.title}
+                </h3>
+
                 <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-gray-500">
-                  <div className="flex items-center">
-                    {scheme.organization}
-                  </div>
+                  <div className="flex items-center">{scheme.organization}</div>
                   <div className="flex items-center">
                     Deadline: {scheme.deadline}
                   </div>
                 </div>
-                
+
                 <p className="text-sm text-gray-600">{scheme.description}</p>
-                
+
                 <div className="pt-3">
                   <Button variant="outline" size="sm">
                     View Details
@@ -113,6 +116,105 @@ export default function Schemes() {
           </Button>
         </div>
       </div>
+      <footer className="bg-gray-900 text-white py-12 mt-16">
+        <div className="container px-4 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">ScholarGate</h3>
+              <p className="text-gray-400">
+                Your gateway to educational funding opportunities.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Scholarships
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Schemes
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    About Us
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Resources</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Application Guide
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Scholarship Tips
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    FAQ
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Blog
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Contact</h3>
+              <ul className="space-y-2">
+                <li className="text-gray-400">info@scholargate.com</li>
+                <li className="text-gray-400">+1 (555) 123-4567</li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+            <p>
+              &copy; {new Date().getFullYear()} ScholarGate. All rights
+              reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

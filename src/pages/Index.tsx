@@ -1,19 +1,24 @@
-
-import { HeroSection } from '@/components/HeroSection';
-import { FeaturedSection } from '@/components/FeaturedSection';
-import { Navbar } from '@/components/Navbar';
-import { Chatbot } from '@/components/ui/chatbot';
-import { motion } from 'framer-motion';
-import { ArrowRight, Award, BookOpen, GraduationCap, Users } from 'lucide-react';
+import { HeroSection } from "@/components/HeroSection";
+import { FeaturedSection } from "@/components/FeaturedSection";
+import { Navbar } from "@/components/Navbar";
+import { Chatbot } from "@/components/ui/chatbot";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  Award,
+  BookOpen,
+  GraduationCap,
+  Users,
+} from "lucide-react";
 
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <main className="flex-1">
         <HeroSection />
-        
+
         {/* Features section */}
         <section className="py-16 bg-gray-50">
           <div className="container px-4 mx-auto">
@@ -32,29 +37,33 @@ const Index = () => {
                 </p>
               </motion.div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
                   icon: <GraduationCap className="h-10 w-10 text-primary" />,
-                  title: 'Comprehensive Database',
-                  description: 'Access thousands of scholarships and schemes from a single platform.'
+                  title: "Comprehensive Database",
+                  description:
+                    "Access thousands of scholarships and schemes from a single platform.",
                 },
                 {
                   icon: <BookOpen className="h-10 w-10 text-primary" />,
-                  title: 'Personalized Matches',
-                  description: 'Get scholarship recommendations tailored to your academic profile and needs.'
+                  title: "Personalized Matches",
+                  description:
+                    "Get scholarship recommendations tailored to your academic profile and needs.",
                 },
                 {
                   icon: <Award className="h-10 w-10 text-primary" />,
-                  title: 'Application Guidance',
-                  description: 'Step-by-step assistance through every scholarship application process.'
+                  title: "Application Guidance",
+                  description:
+                    "Step-by-step assistance through every scholarship application process.",
                 },
                 {
                   icon: <Users className="h-10 w-10 text-primary" />,
-                  title: 'Expert Support',
-                  description: 'Connect with advisors who can help optimize your scholarship strategy.'
-                }
+                  title: "Expert Support",
+                  description:
+                    "Connect with advisors who can help optimize your scholarship strategy.",
+                },
               ].map((feature, index) => (
                 <motion.div
                   key={index}
@@ -67,16 +76,18 @@ const Index = () => {
                   <div className="rounded-full bg-primary/10 p-3 inline-flex mb-5">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    {feature.title}
+                  </h3>
                   <p className="text-gray-600">{feature.description}</p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
-        
+
         <FeaturedSection />
-        
+
         {/* Call to action section */}
         <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
           <div className="container px-4 mx-auto">
@@ -91,10 +102,11 @@ const Index = () => {
                   Ready to Find Your Perfect Scholarship?
                 </h2>
                 <p className="text-xl text-blue-100 mb-8">
-                  Join thousands of students who have found funding for their education through ScholarGate.
+                  Join thousands of students who have found funding for their
+                  education through ScholarGate.
                 </p>
-                <a 
-                  href="#" 
+                <a
+                  href="#"
                   className="inline-flex items-center bg-white text-blue-600 px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 font-medium"
                 >
                   Create Your Account
@@ -105,7 +117,7 @@ const Index = () => {
           </div>
         </section>
       </main>
-      
+
       <footer className="bg-gray-900 text-white py-12">
         <div className="container px-4 mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -118,19 +130,75 @@ const Index = () => {
             <div>
               <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Home</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Scholarships</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Schemes</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Scholarships
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Schemes
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    About Us
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Resources</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Application Guide</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Scholarship Tips</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Application Guide
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Scholarship Tips
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    FAQ
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Blog
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
@@ -142,11 +210,14 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
-            <p>&copy; {new Date().getFullYear()} ScholarGate. All rights reserved.</p>
+            <p>
+              &copy; {new Date().getFullYear()} ScholarGate. All rights
+              reserved.
+            </p>
           </div>
         </div>
       </footer>
-      
+
       <Chatbot />
     </div>
   );

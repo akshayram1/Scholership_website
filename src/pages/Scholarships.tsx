@@ -1,19 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Navbar } from '@/components/Navbar';
-import { Chatbot } from '@/components/ui/chatbot';
-import { ScholarshipCard, ScholarshipData } from '@/components/ScholarshipCard';
-import { motion } from 'framer-motion';
-import { Filter, Search, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/context/AuthContext';
-import { ScholarshipSearchForm } from '@/components/ScholarshipSearchForm';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { z } from 'zod';
-import { LoginForm } from '@/components/LoginForm';
-import { SignupForm } from '@/components/SignupForm';
-import { useToast } from '@/hooks/use-toast';
-import Papa from 'papaparse';
-import scholarshipImage from '/src/assets/scholership.png'; // Import the scholarship image
+import { useState, useEffect } from "react";
+import { Navbar } from "@/components/Navbar";
+import { Chatbot } from "@/components/ui/chatbot";
+import { ScholarshipCard, ScholarshipData } from "@/components/ScholarshipCard";
+import { motion } from "framer-motion";
+import { Filter, Search, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { ScholarshipSearchForm } from "@/components/ScholarshipSearchForm";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { z } from "zod";
+import { LoginForm } from "@/components/LoginForm";
+import { SignupForm } from "@/components/SignupForm";
+import { useToast } from "@/hooks/use-toast";
+import Papa from "papaparse";
+import scholarshipImage from "/src/assets/scholership.png"; // Import the scholarship image
 
 // Updated schema
 const searchFormSchema = z.object({
@@ -31,65 +31,86 @@ type SearchFormValues = z.infer<typeof searchFormSchema>;
 
 // Define CSV data structure
 interface CSVScholarshipData {
-  'Scholarship Name': string;
-  'Eligibility': string;
-  'Deadline': string;
-  'Link': string;
+  "Scholarship Name": string;
+  Eligibility: string;
+  Deadline: string;
+  Link: string;
 }
 
 // Update the mapCsvToScholarshipData function to include eligibility
-const mapCsvToScholarshipData = (csvData: CSVScholarshipData[]): ScholarshipData[] => {
+const mapCsvToScholarshipData = (
+  csvData: CSVScholarshipData[]
+): ScholarshipData[] => {
   return csvData.map((item, index) => {
     // Ensure we have valid data
-    const scholarshipName = item['Scholarship Name'] || '';
-    const eligibility = item.Eligibility?.toLowerCase() || '';
+    const scholarshipName = item["Scholarship Name"] || "";
+    const eligibility = item.Eligibility?.toLowerCase() || "";
 
     // Generate organization name from the first part of scholarship name
-    let organization = '';
+    let organization = "";
     if (scholarshipName) {
-      const firstWord = scholarshipName.split(' ')[0];
-      organization = firstWord === 'The' ?
-        scholarshipName.split(' ')[1] || '' : firstWord;
+      const firstWord = scholarshipName.split(" ")[0];
+      organization =
+        firstWord === "The" ? scholarshipName.split(" ")[1] || "" : firstWord;
     }
 
     // Extract education level with improved detection
-    let level = '';
-    if (eligibility.includes('undergraduate') || eligibility.includes('bachelor') ||
-      eligibility.includes('b.sc') || eligibility.includes('b.tech') ||
-      eligibility.includes('b.e.')) {
-      level = 'undergraduate';
-    } else if (eligibility.includes('postgraduate') || eligibility.includes('master') ||
-      eligibility.includes('m.sc') || eligibility.includes('m.tech')) {
-      level = 'postgraduate';
-    } else if (eligibility.includes('phd') || eligibility.includes('doctoral')) {
-      level = 'phd';
-    } else if (eligibility.includes('class 10') || eligibility.includes('class 9')) {
-      level = 'high_school';
-    } else if (eligibility.includes('class 11') || eligibility.includes('class 12')) {
-      level = 'higher_secondary';
-    } else if (eligibility.includes('matric')) {
-      level = 'high_school';
+    let level = "";
+    if (
+      eligibility.includes("undergraduate") ||
+      eligibility.includes("bachelor") ||
+      eligibility.includes("b.sc") ||
+      eligibility.includes("b.tech") ||
+      eligibility.includes("b.e.")
+    ) {
+      level = "undergraduate";
+    } else if (
+      eligibility.includes("postgraduate") ||
+      eligibility.includes("master") ||
+      eligibility.includes("m.sc") ||
+      eligibility.includes("m.tech")
+    ) {
+      level = "postgraduate";
+    } else if (
+      eligibility.includes("phd") ||
+      eligibility.includes("doctoral")
+    ) {
+      level = "phd";
+    } else if (
+      eligibility.includes("class 10") ||
+      eligibility.includes("class 9")
+    ) {
+      level = "high_school";
+    } else if (
+      eligibility.includes("class 11") ||
+      eligibility.includes("class 12")
+    ) {
+      level = "higher_secondary";
+    } else if (eligibility.includes("matric")) {
+      level = "high_school";
     }
 
     // Extract state with improved detection
-    let state = '';
-    if (eligibility.includes('tripura')) {
-      state = 'tripura';
-    } else if (eligibility.includes('haryana')) {
-      state = 'haryana';
-    } else if (eligibility.includes('maharashtra')) {
-      state = 'maharashtra';
-    } else if (eligibility.includes('chandigarh')) {
-      state = 'chandigarh';
-    } else if (eligibility.includes('west bengal')) {
-      state = 'west bengal';
-    } else if (eligibility.includes('odisha')) {
-      state = 'odisha';
-    } else if (eligibility.includes('manipur')) {
-      state = 'manipur';
+    let state = "";
+    if (eligibility.includes("tripura")) {
+      state = "tripura";
+    } else if (eligibility.includes("haryana")) {
+      state = "haryana";
+    } else if (eligibility.includes("maharashtra")) {
+      state = "maharashtra";
+    } else if (eligibility.includes("chandigarh")) {
+      state = "chandigarh";
+    } else if (eligibility.includes("west bengal")) {
+      state = "west bengal";
+    } else if (eligibility.includes("odisha")) {
+      state = "odisha";
+    } else if (eligibility.includes("manipur")) {
+      state = "manipur";
     }
 
-    const stateMatches = eligibility.match(/domicile of ([a-z\s]+)|resident of ([a-z\s]+)/i);
+    const stateMatches = eligibility.match(
+      /domicile of ([a-z\s]+)|resident of ([a-z\s]+)/i
+    );
     if (stateMatches) {
       state = (stateMatches[1] || stateMatches[2]).trim();
     }
@@ -97,10 +118,14 @@ const mapCsvToScholarshipData = (csvData: CSVScholarshipData[]): ScholarshipData
     // Extract age requirements
     let minAge = 0;
     let maxAge = 100;
-    const ageMatches = eligibility.match(/(\d+) years of age|below (\d+) years|(\d+) years or younger|age of (\d+)/i);
+    const ageMatches = eligibility.match(
+      /(\d+) years of age|below (\d+) years|(\d+) years or younger|age of (\d+)/i
+    );
     if (ageMatches) {
-      const ageValue = parseInt(ageMatches[1] || ageMatches[2] || ageMatches[3] || ageMatches[4]);
-      if (eligibility.includes('below') || eligibility.includes('younger')) {
+      const ageValue = parseInt(
+        ageMatches[1] || ageMatches[2] || ageMatches[3] || ageMatches[4]
+      );
+      if (eligibility.includes("below") || eligibility.includes("younger")) {
         maxAge = ageValue;
       } else {
         minAge = Math.max(0, ageValue - 5);
@@ -113,27 +138,33 @@ const mapCsvToScholarshipData = (csvData: CSVScholarshipData[]): ScholarshipData
       id: `scholarship-${index + 1}`,
       title: scholarshipName,
       organization: organization,
-      description: item.Eligibility || '',
+      description: item.Eligibility || "",
       eligibility: eligibility, // Add this line to include eligibility
-      amount: 'Varies',
-      deadline: item.Deadline !== 'N/A' ? item.Deadline : 'Open',
+      amount: "Varies",
+      deadline: item.Deadline !== "N/A" ? item.Deadline : "Open",
       level: level,
       state: state,
       minAge: minAge,
       image: scholarshipImage, // Use the imported image
       maxAge: maxAge,
-      link: item.Link || '#',
-      tags: [level, state].filter(Boolean)
+      link: item.Link || "#",
+      tags: [level, state].filter(Boolean),
     };
   });
 };
 
 const Scholarships = () => {
-  const [scholarshipsData, setScholarshipsData] = useState<ScholarshipData[]>([]);
-  const [filteredScholarships, setFilteredScholarships] = useState<ScholarshipData[]>([]);
-  const [appliedFilters, setAppliedFilters] = useState<SearchFormValues | null>(null);
+  const [scholarshipsData, setScholarshipsData] = useState<ScholarshipData[]>(
+    []
+  );
+  const [filteredScholarships, setFilteredScholarships] = useState<
+    ScholarshipData[]
+  >([]);
+  const [appliedFilters, setAppliedFilters] = useState<SearchFormValues | null>(
+    null
+  );
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
-  const [authType, setAuthType] = useState<'login' | 'signup'>('login');
+  const [authType, setAuthType] = useState<"login" | "signup">("login");
   const [isLoading, setIsLoading] = useState(true);
 
   const { isAuthenticated } = useAuth();
@@ -146,24 +177,31 @@ const Scholarships = () => {
         setIsLoading(true);
         console.log("Fetching CSV data...");
 
-        const response = await fetch('/scholarships_data.csv');
+        const response = await fetch("/scholarships_data.csv");
 
         if (!response.ok) {
-          console.error(`Failed to fetch CSV: ${response.status} ${response.statusText}`);
+          console.error(
+            `Failed to fetch CSV: ${response.status} ${response.statusText}`
+          );
           toast({
             title: "Error loading scholarships",
             description: `Failed to load data: ${response.status} ${response.statusText}`,
             variant: "destructive",
           });
-          throw new Error(`Failed to load CSV: ${response.status} ${response.statusText}`);
+          throw new Error(
+            `Failed to load CSV: ${response.status} ${response.statusText}`
+          );
         }
 
         const csvText = await response.text();
-        console.log("CSV data loaded, first 100 chars:", csvText.substring(0, 100));
+        console.log(
+          "CSV data loaded, first 100 chars:",
+          csvText.substring(0, 100)
+        );
 
         // Skip the first line if it contains filepath comment
-        const csvData = csvText.startsWith('//')
-          ? csvText.substring(csvText.indexOf('\n') + 1)
+        const csvData = csvText.startsWith("//")
+          ? csvText.substring(csvText.indexOf("\n") + 1)
           : csvText;
 
         // After your CSV is parsed, add these logs
@@ -181,7 +219,9 @@ const Scholarships = () => {
 
             console.log(`Parsed ${results.data.length} rows from CSV`);
 
-            const scholarships = mapCsvToScholarshipData(results.data as CSVScholarshipData[]);
+            const scholarships = mapCsvToScholarshipData(
+              results.data as CSVScholarshipData[]
+            );
             console.log(`Processed ${scholarships.length} scholarships`);
 
             // Log the first few entries to check mapping
@@ -192,12 +232,12 @@ const Scholarships = () => {
             setIsLoading(false);
           },
           error: (error) => {
-            console.error('Error parsing CSV data:', error);
+            console.error("Error parsing CSV data:", error);
             setIsLoading(false);
-          }
+          },
         });
       } catch (error) {
-        console.error('Error loading scholarship data:', error);
+        console.error("Error loading scholarship data:", error);
         setIsLoading(false);
       }
     };
@@ -210,7 +250,7 @@ const Scholarships = () => {
     console.log("Search criteria:", criteria);
     console.log("Available scholarships:", scholarshipsData);
 
-    const results = scholarshipsData.filter(scholarship => {
+    const results = scholarshipsData.filter((scholarship) => {
       // Filter by query (focusing on scholarship name)
       if (criteria.query && criteria.query.trim() !== "") {
         const query = criteria.query.toLowerCase().trim();
@@ -225,18 +265,32 @@ const Scholarships = () => {
       }
 
       // Filter by education level
-      if (criteria.educationLevel && criteria.educationLevel !== "" &&
-        scholarship.level && scholarship.level !== "") {
+      if (
+        criteria.educationLevel &&
+        criteria.educationLevel !== "" &&
+        scholarship.level &&
+        scholarship.level !== ""
+      ) {
         if (criteria.educationLevel !== scholarship.level) {
-          console.log(`Rejected by education level: ${scholarship.title} - Expected: ${criteria.educationLevel}, Got: ${scholarship.level}`);
+          console.log(
+            `Rejected by education level: ${scholarship.title} - Expected: ${criteria.educationLevel}, Got: ${scholarship.level}`
+          );
           return false;
         }
       }
 
       // Filter by state (if applicable)
-      if (criteria.state && criteria.state !== "" &&
-        scholarship.state && scholarship.state !== "") {
-        if (!scholarship.state.toLowerCase().includes(criteria.state.toLowerCase())) {
+      if (
+        criteria.state &&
+        criteria.state !== "" &&
+        scholarship.state &&
+        scholarship.state !== ""
+      ) {
+        if (
+          !scholarship.state
+            .toLowerCase()
+            .includes(criteria.state.toLowerCase())
+        ) {
           console.log(`Rejected by state: ${scholarship.title}`);
           return false;
         }
@@ -244,8 +298,12 @@ const Scholarships = () => {
 
       // Filter by age (if applicable)
       if (criteria.age && criteria.age > 0) {
-        if (scholarship.minAge === undefined || scholarship.maxAge === undefined ||
-          criteria.age < scholarship.minAge || criteria.age > scholarship.maxAge) {
+        if (
+          scholarship.minAge === undefined ||
+          scholarship.maxAge === undefined ||
+          criteria.age < scholarship.minAge ||
+          criteria.age > scholarship.maxAge
+        ) {
           console.log(`Rejected by age: ${scholarship.title}`);
           return false;
         }
@@ -289,7 +347,8 @@ const Scholarships = () => {
                   Explore Scholarships
                 </h1>
                 <p className="text-xl text-purple-100">
-                  Find the perfect funding opportunities for your educational journey.
+                  Find the perfect funding opportunities for your educational
+                  journey.
                 </p>
               </motion.div>
             </div>
@@ -300,6 +359,16 @@ const Scholarships = () => {
           <div className="container px-4 mx-auto">
             <div className="relative">
               <ScholarshipSearchForm onSearch={handleSearch} />
+              <div className="mt-4 flex justify-center">
+                <Button
+                  variant="outline"
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0"
+                  onClick={() => window.location.href = '/ScholarshipAISearch'}
+                >
+                  <Search className="w-4 h-4 mr-2" />
+                  Try AI-Powered Search
+                </Button>
+              </div>
             </div>
 
             {appliedFilters && (
@@ -320,7 +389,10 @@ const Scholarships = () => {
 
                 {appliedFilters.educationLevel && (
                   <div className="bg-violet-100 text-violet-800 px-3 py-1 rounded-full text-sm flex items-center">
-                    <span>Education: {appliedFilters.educationLevel.replace('_', ' ')}</span>
+                    <span>
+                      Education:{" "}
+                      {appliedFilters.educationLevel.replace("_", " ")}
+                    </span>
                     <button
                       className="ml-2 hover:text-violet-900"
                       onClick={resetFilters}
@@ -371,7 +443,9 @@ const Scholarships = () => {
           <div className="container px-4 mx-auto">
             <div className="mb-8 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                {isLoading ? "Loading scholarships..." : `${filteredScholarships.length} Scholarships Available`}
+                {isLoading
+                  ? "Loading scholarships..."
+                  : `${filteredScholarships.length} Scholarships Available`}
               </h2>
             </div>
 
@@ -405,7 +479,9 @@ const Scholarships = () => {
 
             {!isLoading && filteredScholarships.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-lg text-gray-600">No scholarships found matching your criteria.</p>
+                <p className="text-lg text-gray-600">
+                  No scholarships found matching your criteria.
+                </p>
                 <Button
                   variant="outline"
                   className="mt-4"
@@ -432,19 +508,75 @@ const Scholarships = () => {
             <div>
               <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Home</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Scholarships</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Schemes</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Scholarships
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Schemes
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    About Us
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Resources</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Application Guide</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Scholarship Tips</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Application Guide
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Scholarship Tips
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    FAQ
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Blog
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
@@ -456,22 +588,25 @@ const Scholarships = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
-            <p>&copy; {new Date().getFullYear()} ScholarGate. All rights reserved.</p>
+            <p>
+              &copy; {new Date().getFullYear()} ScholarGate. All rights
+              reserved.
+            </p>
           </div>
         </div>
       </footer>
 
       <Dialog open={authDialogOpen} onOpenChange={setAuthDialogOpen}>
         <DialogContent className="sm:max-w-md border-none shadow-xl bg-white/90 backdrop-blur-xl p-6">
-          {authType === 'login' ? (
+          {authType === "login" ? (
             <LoginForm
               onSuccess={handleAuthSuccess}
-              onSwitchToSignup={() => setAuthType('signup')}
+              onSwitchToSignup={() => setAuthType("signup")}
             />
           ) : (
             <SignupForm
               onSuccess={handleAuthSuccess}
-              onSwitchToLogin={() => setAuthType('login')}
+              onSwitchToLogin={() => setAuthType("login")}
             />
           )}
         </DialogContent>

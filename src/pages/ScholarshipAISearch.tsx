@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar } from "@/components/Navbar";
 import { motion } from "framer-motion";
 
-const ScholarshipRecommendation: React.FC = () => {
+const ScholarshipAISearch: React.FC = () => {
     return (
         <>
             <Navbar />
@@ -14,10 +14,10 @@ const ScholarshipRecommendation: React.FC = () => {
                     className="text-center mb-12"
                 >
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                        Personalized Scholarship Recommendations
+                        Scholarship AI Search
                     </h1>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Scholarships tailored to your profile, skills, and academic goals
+                        Find scholarships using our AI-powered search tool.
                     </p>
                 </motion.div>
 
@@ -29,10 +29,10 @@ const ScholarshipRecommendation: React.FC = () => {
                         className="w-full max-w-6xl rounded-lg overflow-hidden shadow-lg"
                     >
                         <iframe
-                            src="https://akshayram1-scholership-finder.hf.space"
+                            src="https://akshayram1-search-scholership.hf.space"
                             frameBorder="0"
-                            width="100%"
-                            height="700"
+                            width="850"
+                            height="450"
                             className="w-full"
                         ></iframe>
                     </motion.div>
@@ -83,4 +83,4 @@ const ScholarshipRecommendation: React.FC = () => {
     );
 };
 
-export default ScholarshipRecommendation;
+export default ScholarshipAISearch;
