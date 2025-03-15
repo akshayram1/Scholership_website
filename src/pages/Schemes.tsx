@@ -3,56 +3,173 @@ import { motion } from "framer-motion";
 import { ScholarshipData } from "@/components/ScholarshipCard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
 
-// Sample schemes data
+// Sample schemes data - Updated with Indian scholarships
 const schemes: ScholarshipData[] = [
   {
-    id: "1",
-    title: "Federal Pell Grant",
-    organization: "U.S. Department of Education",
-    amount: "Up to $6,895",
-    deadline: "June 30, 2023",
-    eligibility: "Undergraduate students with exceptional financial need",
-    level: "Undergraduate",
-    description:
-      "Need-based federal grant program that provides financial aid to low-income undergraduate students to promote access to postsecondary education.",
+    id: '1',
+    title: 'Prime Minister Scholarship Scheme',
+    organization: 'Ministry of Defence',
+    amount: 'Up to ₹36,000 per annum',
+    deadline: 'October 15, 2025',
+    eligibility: 'Wards of ex-servicemen/ex-Coast Guard personnel',
+    level: 'Undergraduate & Professional',
+    description: 'Scholarships for the children of ex-servicemen, ex-coast guards to support higher technical and professional education.'
   },
   {
-    id: "2",
-    title: "Subsidized Stafford Loan",
-    organization: "Federal Student Aid",
-    amount: "Varies",
-    deadline: "Ongoing",
-    eligibility: "Students with financial need",
-    level: "Undergraduate & Graduate",
-    description:
-      "Federal government pays the interest on these loans while students are in school at least half-time, during grace periods, and during deferment periods.",
+    id: '2',
+    title: 'Post-Matric Scholarship for SC Students',
+    organization: 'Ministry of Social Justice and Empowerment',
+    amount: 'Varies based on course',
+    deadline: 'December 31, 2025',
+    eligibility: 'SC students with family income below ₹2.5 lakh per annum',
+    level: 'Post-Matric',
+    description: 'Financial assistance to Scheduled Caste students studying at post matriculation or post-secondary stage to enable them to complete their education.'
   },
   {
-    id: "3",
-    title: "Work-Study Program",
-    organization: "Federal Student Aid",
-    amount: "Varies by position",
-    deadline: "Ongoing",
-    eligibility: "Students with financial need",
-    level: "Undergraduate & Graduate",
-    description:
-      "Provides part-time jobs for undergraduate and graduate students with financial need, allowing them to earn money to help pay education expenses.",
+    id: '3',
+    title: 'National Scholarship Portal (NSP) Schemes',
+    organization: 'Government of India',
+    amount: 'Varies by scheme',
+    deadline: 'Ongoing',
+    eligibility: 'Students from minority communities and economically weaker sections',
+    level: 'Undergraduate & Graduate',
+    description: 'Central platform for various scholarships offered by central and state governments for minority students and those from economically weaker sections.'
   },
   {
-    id: "4",
-    title: "TEACH Grant",
-    organization: "U.S. Department of Education",
-    amount: "Up to $4,000 per year",
-    deadline: "Varies by school",
-    eligibility: "Students planning to become teachers",
-    level: "Undergraduate & Graduate",
-    description:
-      "Provides grants to students who agree to teach for four years at an elementary school, secondary school, or educational service agency that serves students from low-income families.",
+    id: '4',
+    title: 'INSPIRE Scholarship',
+    organization: 'Department of Science & Technology',
+    amount: '₹80,000 per annum',
+    deadline: 'September 30, 2025',
+    eligibility: 'Top 1% performers in Class 12 pursuing science courses',
+    level: 'Undergraduate',
+    description: 'Innovation in Science Pursuit for Inspired Research scholarship for students pursuing basic and natural sciences at the undergraduate level.'
   },
+  {
+    id: '5',
+    title: 'AICTE Pragati Scholarship for Girls',
+    organization: 'AICTE',
+    amount: '₹50,000 per annum',
+    deadline: 'November 30, 2025',
+    eligibility: 'Female students in AICTE approved technical institutions',
+    level: 'Technical Education',
+    description: 'Scheme to provide assistance for advancement of girls\' participation in technical education to promote technical education among females.'
+  },
+  {
+    id: '6',
+    title: 'Central Sector Scheme of Scholarships',
+    organization: 'Ministry of Education',
+    amount: '₹12,000 per annum',
+    deadline: 'January 15, 2026',
+    eligibility: 'Students from low income families who scored above 80% in Class 12',
+    level: 'Undergraduate & Graduate',
+    description: 'Financial assistance to meritorious students from low income families to meet a part of their day-to-day expenses while pursuing higher studies.'
+  }
+];
+
+// Additional scholarships to load more
+const additionalSchemes: ScholarshipData[] = [
+  {
+    id: '7',
+    title: 'Kishore Vaigyanik Protsahan Yojana (KVPY)',
+    organization: 'Department of Science & Technology',
+    amount: 'Up to ₹1.2 lakh per annum',
+    deadline: 'August 31, 2025',
+    eligibility: 'Students pursuing basic science courses and aptitude for research',
+    level: 'Undergraduate',
+    description: 'Program to encourage students who have demonstrated potential for research towards pursuing a career in research in basic sciences.'
+  },
+  {
+    id: '8',
+    title: 'National Means-cum-Merit Scholarship',
+    organization: 'Ministry of Education',
+    amount: '₹12,000 per annum',
+    deadline: 'October 31, 2025',
+    eligibility: 'Economically weaker students scoring at least 55% in Class 8',
+    level: 'Secondary Education',
+    description: 'Scholarships awarded to meritorious students from economically weaker sections to arrest their drop out at class 8 and encourage them to continue education.'
+  },
+  {
+    id: '9',
+    title: 'Sitaram Jindal Foundation Scholarship',
+    organization: 'Sitaram Jindal Foundation',
+    amount: 'Varies by course',
+    deadline: 'December 15, 2025',
+    eligibility: 'Meritorious and economically weak students',
+    level: 'Undergraduate & Graduate',
+    description: 'Financial support to meritorious students facing economic constraints to pursue higher education in various disciplines.'
+  },
+  {
+    id: '10',
+    title: 'Swami Dayanand Education Foundation',
+    organization: 'Swami Dayanand Education Foundation',
+    amount: 'Up to ₹75,000 per annum',
+    deadline: 'September 15, 2025',
+    eligibility: 'Meritorious students with family income below ₹5 lakh per annum',
+    level: 'Undergraduate & Graduate',
+    description: 'Merit-cum-means scholarships for students pursuing higher education in various disciplines.'
+  },
+  {
+    id: '11',
+    title: 'Post-Matric Scholarship for ST Students',
+    organization: 'Ministry of Tribal Affairs',
+    amount: 'Varies based on course',
+    deadline: 'November 30, 2025',
+    eligibility: 'ST students with family income below ₹2.5 lakh per annum',
+    level: 'Post-Matric',
+    description: 'Financial assistance to Scheduled Tribe students studying at post matriculation or post-secondary stage to enable them to complete their education.'
+  },
+  {
+    id: '12',
+    title: 'AICTE Saksham Scholarship for Differently-Abled',
+    organization: 'AICTE',
+    amount: '₹50,000 per annum',
+    deadline: 'October 31, 2025',
+    eligibility: 'Differently-abled students in AICTE approved institutions',
+    level: 'Technical Education',
+    description: 'Scholarship scheme to provide encouragement and support to differently-abled students to pursue technical education.'
+  },
+  {
+    id: '13',
+    title: 'Post-Matric Scholarship for OBC Students',
+    organization: 'Ministry of Social Justice and Empowerment',
+    amount: 'Varies based on course',
+    deadline: 'December 15, 2025',
+    eligibility: 'OBC students with family income below ₹2.5 lakh per annum',
+    level: 'Post-Matric',
+    description: 'Financial assistance to OBC students studying at post matriculation or post-secondary stage to enable them to complete their education.'
+  },
+  {
+    id: '14',
+    title: 'UGC-NET Junior Research Fellowship',
+    organization: 'University Grants Commission',
+    amount: '₹31,000 per month + HRA',
+    deadline: 'February 28, 2026',
+    eligibility: 'Students who have cleared UGC-NET examination',
+    level: 'Research',
+    description: 'Fellowship awarded to candidates who qualify the UGC-NET examination to pursue research leading to Ph.D. degree.'
+  },
+  {
+    id: '15',
+    title: 'Merit-cum-Means Scholarship for Professional and Technical Courses',
+    organization: 'Ministry of Minority Affairs',
+    amount: 'Up to ₹25,000 per annum',
+    deadline: 'October 31, 2025',
+    eligibility: 'Students from minority communities with family income below ₹2.5 lakh per annum',
+    level: 'Professional & Technical',
+    description: 'Financial assistance to students from minority communities pursuing professional and technical courses.'
+  }
 ];
 
 export default function Schemes() {
+  const [displayedSchemes, setDisplayedSchemes] = useState(schemes);
+
+  const loadMoreSchemes = () => {
+    setDisplayedSchemes([...displayedSchemes, ...additionalSchemes]);
+  };
+
   return (
     <>
       <Navbar />
@@ -72,7 +189,7 @@ export default function Schemes() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {schemes.map((scheme, index) => (
+          {displayedSchemes.map((scheme, index) => (
             <motion.div
               key={scheme.id}
               initial={{ opacity: 0, y: 20 }}
@@ -111,7 +228,7 @@ export default function Schemes() {
         </div>
 
         <div className="text-center mb-16">
-          <Button variant="outline" size="lg">
+          <Button variant="outline" size="lg" onClick={loadMoreSchemes}>
             Load More Schemes
           </Button>
         </div>
