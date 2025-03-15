@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/Navbar";
 import { motion } from "framer-motion";
-import Footer from "../components/Footer";
 
 export default function AboutUs() {
   return (
@@ -99,7 +98,6 @@ export default function AboutUs() {
             </div>
           </motion.div>
         </div>
-        <Footer />
       </div>
     </>
   );
