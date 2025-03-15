@@ -22,6 +22,7 @@ export function Chatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [csvData, setCsvData] = useState<string | null>(null);
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -34,6 +35,24 @@ export function Chatbot() {
       }, 300);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/scholarships_data.csv');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.text();
+        setCsvData(data);
+      } catch (error) {
+        console.error('Error fetching CSV data:', error);
+        setCsvData(null);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   if (!isAuthenticated) return null;
 
@@ -60,7 +79,7 @@ export function Chatbot() {
       const response = await fetch(`${BACKEND_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: input, context: csvData }),
       });
 
       if (!response.ok) {
