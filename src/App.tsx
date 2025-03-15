@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Index from "./pages/Index";
 import Scholarships from "./pages/Scholarships";
@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import ScholarshipRecommendation from "./pages/ScholarshipRecommendation"; // Import the ScholarshipRecommendation page
+import ScholarshipAISearch from "./pages/ScholarshipAISearch"; // Update this import path
 import { Chatbot } from "@/components/ui/chatbot"; // Import the Chatbot component
 
 const queryClient = new QueryClient();
@@ -22,7 +23,7 @@ const App = () => (
       <AuthProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <Router>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/scholarships" element={<Scholarships />} />
@@ -31,9 +32,10 @@ const App = () => (
             <Route path="/profile" element={<Profile />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/scholarship-recommendation" element={<ScholarshipRecommendation />} />
+            <Route path="/ScholarshipAISearch" element={<ScholarshipAISearch />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
+        </Router>
         {/* Render the Chatbot component globally */}
         <Chatbot />
       </AuthProvider>
