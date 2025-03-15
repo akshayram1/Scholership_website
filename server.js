@@ -9,9 +9,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 
-// Ensure Google API Key is loaded correctly
-//const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-const GOOGLE_API_KEY = "";
+
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+
 
 if (!GOOGLE_API_KEY) {
   console.error("❌ Google API key is missing. Please set GOOGLE_API_KEY in .env file.");
@@ -33,6 +33,7 @@ const db = mysql.createPool({
   password: process.env.DB_PASSWORD || "root",
   database: process.env.DB_NAME || "auth_db",
 });
+
 
 // Test database connection
 db.getConnection()
