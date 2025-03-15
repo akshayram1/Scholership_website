@@ -41,6 +41,7 @@ interface CSVScholarshipData {
 const mapCsvToScholarshipData = (
   csvData: CSVScholarshipData[]
 ): ScholarshipData[] => {
+  // ...existing code...
   return csvData.map((item, index) => {
     // Ensure we have valid data
     const scholarshipName = item["Scholarship Name"] || "";
@@ -160,12 +161,16 @@ const Scholarships = () => {
   const [filteredScholarships, setFilteredScholarships] = useState<
     ScholarshipData[]
   >([]);
+  const [displayedScholarships, setDisplayedScholarships] = useState<
+    ScholarshipData[]
+  >([]);
   const [appliedFilters, setAppliedFilters] = useState<SearchFormValues | null>(
     null
   );
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authType, setAuthType] = useState<"login" | "signup">("login");
   const [isLoading, setIsLoading] = useState(true);
+  const [itemsToShow, setItemsToShow] = useState(12);
 
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
@@ -229,6 +234,7 @@ const Scholarships = () => {
 
             setScholarshipsData(scholarships);
             setFilteredScholarships(scholarships);
+            setDisplayedScholarships(scholarships.slice(0, itemsToShow));
             setIsLoading(false);
           },
           error: (error) => {
@@ -244,6 +250,15 @@ const Scholarships = () => {
 
     loadScholarshipData();
   }, []);
+
+  // Update filtered scholarships when itemsToShow changes
+  useEffect(() => {
+    setDisplayedScholarships(filteredScholarships.slice(0, itemsToShow));
+  }, [filteredScholarships, itemsToShow]);
+
+  const loadMoreScholarships = () => {
+    setItemsToShow(prevCount => prevCount + 12);
+  };
 
   // Update the handleSearch function to focus on scholarship names
   const handleSearch = (criteria: SearchFormValues) => {
@@ -314,11 +329,15 @@ const Scholarships = () => {
 
     console.log("Search results:", results);
     setFilteredScholarships(results);
+    setItemsToShow(12); // Reset to show first 12 items when searching
+    setDisplayedScholarships(results.slice(0, 12));
     setAppliedFilters(criteria);
   };
 
   const resetFilters = () => {
     setFilteredScholarships(scholarshipsData);
+    setItemsToShow(12); // Reset to show first 12 items
+    setDisplayedScholarships(scholarshipsData.slice(0, 12));
     setAppliedFilters(null);
   };
 
@@ -445,7 +464,7 @@ const Scholarships = () => {
               <h2 className="text-2xl font-bold text-gray-900">
                 {isLoading
                   ? "Loading scholarships..."
-                  : `${filteredScholarships.length} Scholarships Available`}
+                  : `${filteredScholarships.length} Scholarships Available (Showing ${displayedScholarships.length})`}
               </h2>
             </div>
 
@@ -467,7 +486,7 @@ const Scholarships = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredScholarships.map((scholarship, index) => (
+                {displayedScholarships.map((scholarship, index) => (
                   <ScholarshipCard
                     key={scholarship.id}
                     scholarship={scholarship}
@@ -488,6 +507,19 @@ const Scholarships = () => {
                   onClick={resetFilters}
                 >
                   Reset Filters
+                </Button>
+              </div>
+            )}
+
+            {!isLoading && filteredScholarships.length > displayedScholarships.length && (
+              <div className="text-center mt-12">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={loadMoreScholarships}
+                  className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white border-0"
+                >
+                  Load More Scholarships
                 </Button>
               </div>
             )}
